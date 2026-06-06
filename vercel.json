@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/send-email.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/send-email",
+      "destination": "/api/send-email.py"
+    }
+  ]
+}
