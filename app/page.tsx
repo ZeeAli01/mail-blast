@@ -54,8 +54,8 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
                           bg-violet-500/10 border border-violet-500/20
                           text-violet-300 text-xs font-medium mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Ready to send
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            Public demo
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-3 tracking-tight">

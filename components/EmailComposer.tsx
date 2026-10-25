@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 import {
   Send, ChevronDown, ChevronUp, Paperclip,
-  MailCheck, Loader2, X, Settings, Eye, EyeOff
+  MailCheck, Loader2, X, Settings, Eye, EyeOff, Info
 } from "lucide-react";
 import RecipientInput from "./RecipientInput";
 import EditorPanel, { ContentType } from "./EditorPanel";
@@ -32,6 +32,8 @@ const initialForm: EmailForm = {
   fromName: "",
   replyTo: "",
 };
+
+const emailSendingEnabled = false;
 
 export default function EmailComposer() {
   const [form, setForm] = useState<EmailForm>(initialForm);
@@ -234,6 +236,19 @@ export default function EmailComposer() {
 
         <div className="h-px bg-white/[0.05]" />
 
+        <div
+          id="email-sending-disabled"
+          role="status"
+          className="flex gap-3 rounded-xl border border-violet-400/20 bg-violet-400/[0.07] px-4 py-3 text-sm text-violet-100/75"
+        >
+          <Info size={17} className="mt-0.5 shrink-0 text-violet-400" />
+          <p className="leading-relaxed">
+            Email sending is disabled in this public demo. MailBlast requires your
+            own sender configuration before it can send emails. Support for
+            end-user email configuration is planned for a future release.
+          </p>
+        </div>
+
         {/* Summary + Send */}
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="text-sm text-white/40 space-y-0.5">
@@ -271,7 +286,8 @@ export default function EmailComposer() {
             <button
               type="button"
               onClick={handleSend}
-              disabled={!isValid || sending}
+              disabled={!emailSendingEnabled || !isValid || sending}
+              aria-describedby="email-sending-disabled"
               className={cn(
                 "btn-primary flex items-center gap-2.5 px-6 py-3 text-sm",
                 sent && "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"
@@ -290,7 +306,7 @@ export default function EmailComposer() {
               ) : (
                 <>
                   <Send size={15} />
-                  Send Email
+                  Sending Disabled
                   {totalRecipients > 0 && (
                     <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs font-bold">
                       {totalRecipients}

@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
+  if (process.env.EMAIL_SENDING_ENABLED !== "true") {
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          "Email sending is disabled. Configure a sender and explicitly enable sending before using MailBlast.",
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
     

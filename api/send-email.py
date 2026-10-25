@@ -120,6 +120,19 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        if os.getenv("EMAIL_SENDING_ENABLED", "").lower() != "true":
+            self._respond(
+                503,
+                {
+                    "success": False,
+                    "error": (
+                        "Email sending is disabled. Configure a sender and explicitly "
+                        "enable sending before using MailBlast."
+                    ),
+                },
+            )
+            return
+
         try:
             content_length = int(self.headers.get("Content-Length", 0))
             raw_body = self.rfile.read(content_length)
