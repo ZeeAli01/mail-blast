@@ -19,11 +19,16 @@ import {
   type PlatformRole,
 } from "./permissions";
 
-export async function requireUser() {
+export async function getCurrentUser() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session)
+  return session?.user ?? null;
+}
+
+export async function requireUser() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser)
     throw new AppError("AUTHENTICATION_REQUIRED", "Sign in is required.", 401);
-  return session.user;
+  return currentUser;
 }
 
 export async function requireOrganizationPermission(
@@ -59,18 +64,28 @@ export async function requireOrganizationPermission(
 export async function requirePlatformPermission(
   permission: PlatformPermission,
 ) {
-  const currentUser = await requireUser();
+  const access = await getPlatformAccess(permission);
+  if (access.status === "unauthenticated")
+    throw new AppError("AUTHENTICATION_REQUIRED", "Sign in is required.", 401);
+  if (access.status === "forbidden")
+    throw new AppError(
+      "FORBIDDEN",
+      "Platform operator permission is required.",
+      403,
+    );
+  return { user: access.user, roles: access.roles };
+}
+
+export async function getPlatformAccess(permission: PlatformPermission) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return { status: "unauthenticated" as const };
   const rows = await db
     .select({ role: platformOperatorRoles.role })
     .from(platformOperatorRoles)
     .where(eq(platformOperatorRoles.userId, currentUser.id));
   const roles = rows.map((row) => row.role as PlatformRole);
   if (!hasPlatformPermission(roles, permission)) {
-    throw new AppError(
-      "FORBIDDEN",
-      "Platform operator permission is required.",
-      403,
-    );
+    return { status: "forbidden" as const, user: currentUser, roles };
   }
-  return { user: currentUser, roles };
+  return { status: "authorized" as const, user: currentUser, roles };
 }

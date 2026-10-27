@@ -1,4 +1,5 @@
-import { requirePlatformPermission } from "@/src/server/auth/authorization";
+import { PlatformAccessDenied } from "@/components/PlatformAccessDenied";
+import { getPlatformAccess } from "@/src/server/auth/authorization";
 import {
   AlertTriangle,
   Building2,
@@ -9,6 +10,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const tools = [
   [
@@ -44,7 +46,11 @@ const tools = [
 ] as const;
 
 export default async function PlatformPage() {
-  await requirePlatformPermission("platform.organizations.read");
+  const access = await getPlatformAccess("platform.organizations.read");
+  if (access.status === "unauthenticated")
+    redirect("/sign-in?callbackURL=%2Fplatform");
+  if (access.status === "forbidden")
+    return <PlatformAccessDenied userEmail={access.user.email} />;
   return (
     <main className="min-h-screen bg-[#070711] px-5 py-10 text-slate-100">
       <div className="mx-auto max-w-6xl">

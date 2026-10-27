@@ -6,7 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
+export function AuthForm({
+  mode,
+  callbackURL = "/dashboard",
+}: {
+  mode: "sign-in" | "sign-up";
+  callbackURL?: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,19 +30,19 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           email,
           password,
           name: String(data.get("name")),
-          callbackURL: "/dashboard",
+          callbackURL,
         })
       : await authClient.signIn.email({
           email,
           password,
-          callbackURL: "/dashboard",
+          callbackURL,
         });
     if (result.error) {
       setError(result.error.message ?? "Authentication failed.");
       setPending(false);
       return;
     }
-    router.push("/dashboard");
+    router.push(callbackURL);
     router.refresh();
   }
 
