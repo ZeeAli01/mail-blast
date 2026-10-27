@@ -1,4 +1,0 @@
-# Python (only needed for CLI script)
-# All standard library — no pip install required for basic use.
-# Optional: for .env file loading in CLI script
-python-dotenv>=1.0.0

@@ -3,8 +3,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Code2, Eye, AlignLeft, Bold, Italic, Link2, List,
-  Heading1, Heading2, Image, Minus, Quote, RotateCcw
+  Code2,
+  Eye,
+  AlignLeft,
+  Bold,
+  Italic,
+  Link2,
+  List,
+  Heading1,
+  Heading2,
+  Image as ImageIcon,
+  Minus,
+  Quote,
+  RotateCcw,
 } from "lucide-react";
 import { cn, countWords, pluralize } from "@/lib/utils";
 
@@ -26,39 +37,80 @@ interface FormatAction {
 
 const htmlFormatActions: FormatAction[] = [
   {
-    icon: <Bold size={13} />, label: "Bold",
-    insertFn: (sel) => [`<strong>${sel || "bold text"}</strong>`, 8, sel ? 8 + sel.length : 17],
+    icon: <Bold size={13} />,
+    label: "Bold",
+    insertFn: (sel) => [
+      `<strong>${sel || "bold text"}</strong>`,
+      8,
+      sel ? 8 + sel.length : 17,
+    ],
   },
   {
-    icon: <Italic size={13} />, label: "Italic",
-    insertFn: (sel) => [`<em>${sel || "italic text"}</em>`, 4, sel ? 4 + sel.length : 15],
+    icon: <Italic size={13} />,
+    label: "Italic",
+    insertFn: (sel) => [
+      `<em>${sel || "italic text"}</em>`,
+      4,
+      sel ? 4 + sel.length : 15,
+    ],
   },
   {
-    icon: <Heading1 size={13} />, label: "H1",
-    insertFn: (sel) => [`<h1>${sel || "Heading 1"}</h1>`, 4, sel ? 4 + sel.length : 13],
+    icon: <Heading1 size={13} />,
+    label: "H1",
+    insertFn: (sel) => [
+      `<h1>${sel || "Heading 1"}</h1>`,
+      4,
+      sel ? 4 + sel.length : 13,
+    ],
   },
   {
-    icon: <Heading2 size={13} />, label: "H2",
-    insertFn: (sel) => [`<h2>${sel || "Heading 2"}</h2>`, 4, sel ? 4 + sel.length : 13],
+    icon: <Heading2 size={13} />,
+    label: "H2",
+    insertFn: (sel) => [
+      `<h2>${sel || "Heading 2"}</h2>`,
+      4,
+      sel ? 4 + sel.length : 13,
+    ],
   },
   {
-    icon: <Link2 size={13} />, label: "Link",
-    insertFn: (sel) => [`<a href="https://example.com">${sel || "link text"}</a>`, 9, 28],
+    icon: <Link2 size={13} />,
+    label: "Link",
+    insertFn: (sel) => [
+      `<a href="https://example.com">${sel || "link text"}</a>`,
+      9,
+      28,
+    ],
   },
   {
-    icon: <List size={13} />, label: "List",
-    insertFn: () => [`<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n</ul>`, 6, 14],
+    icon: <List size={13} />,
+    label: "List",
+    insertFn: () => [
+      `<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n</ul>`,
+      6,
+      14,
+    ],
   },
   {
-    icon: <Quote size={13} />, label: "Quote",
-    insertFn: (sel) => [`<blockquote>${sel || "Quote text"}</blockquote>`, 12, sel ? 12 + sel.length : 22],
+    icon: <Quote size={13} />,
+    label: "Quote",
+    insertFn: (sel) => [
+      `<blockquote>${sel || "Quote text"}</blockquote>`,
+      12,
+      sel ? 12 + sel.length : 22,
+    ],
   },
   {
-    icon: <Image size={13} />, label: "Image",
-    insertFn: () => [`<img src="https://example.com/image.jpg" alt="Description" />`, 10, 42],
+    icon: <ImageIcon size={13} />,
+    label: "Image",
+    insertFn: () => [
+      `<img src="https://example.com/image.jpg" alt="Description" />`,
+      10,
+      42,
+    ],
   },
   {
-    icon: <Minus size={13} />, label: "Divider",
+    icon: <Minus size={13} />,
+    label: "Divider",
     insertFn: () => [`\n<hr />\n`, 1, 1],
   },
 ];
@@ -99,9 +151,18 @@ export default function EditorPanel({
   }, [value]);
 
   const htmlTemplates = [
-    { label: "Welcome Email", template: `<h1>Welcome! 🎉</h1>\n<p>Hi there,</p>\n<p>We're thrilled to have you on board. Here's what you can do next:</p>\n<ul>\n  <li>Explore our features</li>\n  <li>Complete your profile</li>\n  <li>Connect with your team</li>\n</ul>\n<p>Best regards,<br/><strong>The Team</strong></p>` },
-    { label: "Newsletter", template: `<h1>Monthly Newsletter 📬</h1>\n<hr />\n<h2>What's New</h2>\n<p>Here are the highlights from this month...</p>\n<h2>Featured Article</h2>\n<p>Read our latest post on <a href="#">getting started</a>.</p>\n<hr />\n<p style="font-size:12px;color:#888">You're receiving this because you subscribed. <a href="#">Unsubscribe</a></p>` },
-    { label: "Announcement", template: `<h1>📢 Important Announcement</h1>\n<p>Dear valued customer,</p>\n<p>We are excited to announce something big is coming your way.</p>\n<blockquote>This is a game-changer for our community.</blockquote>\n<p>Stay tuned for more details.</p>\n<p>Warm regards,<br/><strong>The Team</strong></p>` },
+    {
+      label: "Welcome Email",
+      template: `<h1>Welcome! 🎉</h1>\n<p>Hi there,</p>\n<p>We're thrilled to have you on board. Here's what you can do next:</p>\n<ul>\n  <li>Explore our features</li>\n  <li>Complete your profile</li>\n  <li>Connect with your team</li>\n</ul>\n<p>Best regards,<br/><strong>The Team</strong></p>`,
+    },
+    {
+      label: "Newsletter",
+      template: `<h1>Monthly Newsletter 📬</h1>\n<hr />\n<h2>What's New</h2>\n<p>Here are the highlights from this month...</p>\n<h2>Featured Article</h2>\n<p>Read our latest post on <a href="#">getting started</a>.</p>\n<hr />\n<p style="font-size:12px;color:#888">You're receiving this because you subscribed. <a href="#">Unsubscribe</a></p>`,
+    },
+    {
+      label: "Announcement",
+      template: `<h1>📢 Important Announcement</h1>\n<p>Dear valued customer,</p>\n<p>We are excited to announce something big is coming your way.</p>\n<blockquote>This is a game-changer for our community.</blockquote>\n<p>Stay tuned for more details.</p>\n<p>Warm regards,<br/><strong>The Team</strong></p>`,
+    },
   ];
 
   return (
@@ -123,7 +184,7 @@ export default function EditorPanel({
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                 contentType === "text"
                   ? "bg-violet-600 text-white shadow"
-                  : "text-white/50 hover:text-white/80"
+                  : "text-white/50 hover:text-white/80",
               )}
             >
               <AlignLeft size={11} />
@@ -136,7 +197,7 @@ export default function EditorPanel({
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                 contentType === "html"
                   ? "bg-violet-600 text-white shadow"
-                  : "text-white/50 hover:text-white/80"
+                  : "text-white/50 hover:text-white/80",
               )}
             >
               <Code2 size={11} />
@@ -154,7 +215,7 @@ export default function EditorPanel({
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                   mode === "write"
                     ? "bg-white/10 text-white"
-                    : "text-white/50 hover:text-white/80"
+                    : "text-white/50 hover:text-white/80",
                 )}
               >
                 <Code2 size={11} />
@@ -167,7 +228,7 @@ export default function EditorPanel({
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                   mode === "preview"
                     ? "bg-white/10 text-white"
-                    : "text-white/50 hover:text-white/80"
+                    : "text-white/50 hover:text-white/80",
                 )}
               >
                 <Eye size={11} />
@@ -247,7 +308,7 @@ export default function EditorPanel({
               }
               className={cn(
                 "glass-input w-full min-h-[220px] px-4 py-3 text-sm leading-relaxed resize-none",
-                contentType === "html" && "font-mono text-violet-200 text-xs"
+                contentType === "html" && "font-mono text-violet-200 text-xs",
               )}
               spellCheck={contentType === "text"}
             />
@@ -267,7 +328,9 @@ export default function EditorPanel({
                 dangerouslySetInnerHTML={{ __html: value }}
               />
             ) : (
-              <p className="text-white/20 text-sm italic">No content to preview yet…</p>
+              <p className="text-white/20 text-sm italic">
+                No content to preview yet…
+              </p>
             )}
           </motion.div>
         )}
@@ -279,7 +342,9 @@ export default function EditorPanel({
           {pluralize(wordCount, "word")} · {charCount.toLocaleString()} chars
         </span>
         {contentType === "html" && mode === "write" && (
-          <span className="text-violet-400/60">HTML mode — click Preview to see rendered output</span>
+          <span className="text-violet-400/60">
+            HTML mode — click Preview to see rendered output
+          </span>
         )}
       </div>
     </div>

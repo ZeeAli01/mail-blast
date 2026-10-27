@@ -3,13 +3,14 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Mail, Zap, Globe, Shield } from "lucide-react";
+import { Mail, PanelsTopLeft, Eye, ShieldCheck } from "lucide-react";
 import EmailComposer from "@/components/EmailComposer";
+import Link from "next/link";
 
 const features = [
-  { icon: <Zap size={14} />, label: "Instant delivery" },
-  { icon: <Globe size={14} />, label: "Unlimited recipients" },
-  { icon: <Shield size={14} />, label: "Secure & private" },
+  { icon: <PanelsTopLeft size={14} />, label: "Campaign composer" },
+  { icon: <Eye size={14} />, label: "Responsive preview" },
+  { icon: <ShieldCheck size={14} />, label: "Sending disabled safely" },
 ];
 
 export default function HomePage() {
@@ -44,16 +45,20 @@ export default function HomePage() {
           className="text-center mb-10"
         >
           {/* Logo */}
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
+          <div
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
                           bg-gradient-to-br from-violet-600 to-purple-700
-                          shadow-[0_0_40px_rgba(124,58,237,0.5)] mb-5">
+                          shadow-[0_0_40px_rgba(124,58,237,0.5)] mb-5"
+          >
             <Mail size={26} className="text-white" />
           </div>
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
+          <div
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
                           bg-violet-500/10 border border-violet-500/20
-                          text-violet-300 text-xs font-medium mb-4">
+                          text-violet-300 text-xs font-medium mb-4"
+          >
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
             Public demo
           </div>
@@ -66,8 +71,8 @@ export default function HomePage() {
           </h1>
 
           <p className="text-white/50 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
-            Compose and send beautiful emails — plain text or full HTML — to any
-            number of recipients in seconds.
+            Explore the campaign composer while we build safe, configurable
+            delivery for business teams.
           </p>
 
           {/* Feature pills */}
@@ -83,6 +88,12 @@ export default function HomePage() {
               </span>
             ))}
           </div>
+          <Link
+            href="/product"
+            className="mt-5 inline-flex text-sm font-medium text-violet-300 hover:text-violet-200"
+          >
+            Explore the full product foundation →
+          </Link>
         </motion.div>
 
         {/* Main Composer */}
@@ -102,7 +113,7 @@ export default function HomePage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-10 text-xs text-white/20 text-center"
         >
-          Powered by Python · Next.js · Deployed on Vercel
+          Free-first product development · Built with Next.js
         </motion.p>
       </div>
 

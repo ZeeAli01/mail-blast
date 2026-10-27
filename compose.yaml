@@ -1,0 +1,23 @@
+name: mailblast
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: email_product
+      POSTGRES_USER: app_migration
+      POSTGRES_PASSWORD: migration_local_only
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_migration -d email_product"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - mailblast_postgres:/var/lib/postgresql/data
+      - ./scripts/sql:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  mailblast_postgres:

@@ -89,7 +89,8 @@
 
 /* Editor prose styles for HTML preview */
 .email-preview {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   color: #e2e8f0;
@@ -103,11 +104,19 @@
   color: #f1f5f9;
 }
 
-.email-preview h1 { font-size: 1.75em; }
-.email-preview h2 { font-size: 1.4em; }
-.email-preview h3 { font-size: 1.15em; }
+.email-preview h1 {
+  font-size: 1.75em;
+}
+.email-preview h2 {
+  font-size: 1.4em;
+}
+.email-preview h3 {
+  font-size: 1.15em;
+}
 
-.email-preview p { margin: 0.5em 0; }
+.email-preview p {
+  margin: 0.5em 0;
+}
 
 .email-preview a {
   color: #a78bfa;
@@ -120,7 +129,9 @@
   margin: 0.5em 0;
 }
 
-.email-preview li { margin: 0.25em 0; }
+.email-preview li {
+  margin: 0.25em 0;
+}
 
 .email-preview blockquote {
   border-left: 3px solid #7c3aed;

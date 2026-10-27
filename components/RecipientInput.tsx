@@ -33,8 +33,8 @@ export default function RecipientInput({
       .filter(Boolean);
 
     let added = 0;
-    let invalid: string[] = [];
-    let newRecipients = [...recipients];
+    const invalid: string[] = [];
+    const newRecipients = [...recipients];
 
     for (const email of emails) {
       if (!isValidEmail(email)) {
@@ -48,7 +48,9 @@ export default function RecipientInput({
     }
 
     if (invalid.length > 0) {
-      setError(`Invalid: ${invalid.slice(0, 2).join(", ")}${invalid.length > 2 ? "…" : ""}`);
+      setError(
+        `Invalid: ${invalid.slice(0, 2).join(", ")}${invalid.length > 2 ? "…" : ""}`,
+      );
       setTimeout(() => setError(""), 3000);
     }
 
@@ -97,7 +99,7 @@ export default function RecipientInput({
           "bg-white/[0.04] flex flex-wrap gap-1.5 items-center",
           isFocused
             ? "border-violet-500/60 bg-white/[0.06] shadow-[0_0_0_3px_rgba(124,58,237,0.15)]"
-            : "border-white/[0.08]"
+            : "border-white/[0.08]",
         )}
         onClick={() => inputRef.current?.focus()}
       >
@@ -175,9 +177,15 @@ export default function RecipientInput({
 
       {recipients.length > 0 && (
         <p className="text-xs text-white/25">
-          Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">Enter</kbd>
-          {" "}or <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">,</kbd>
-          {" "}to add · paste multiple at once · backspace to remove last
+          Press{" "}
+          <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">
+            Enter
+          </kbd>{" "}
+          or{" "}
+          <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">
+            ,
+          </kbd>{" "}
+          to add · paste multiple at once · backspace to remove last
         </p>
       )}
     </div>

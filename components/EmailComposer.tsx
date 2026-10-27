@@ -2,14 +2,10 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-hot-toast";
-import {
-  Send, ChevronDown, ChevronUp, Paperclip,
-  MailCheck, Loader2, X, Settings, Eye, EyeOff, Info
-} from "lucide-react";
+import { Send, ChevronDown, ChevronUp, X, Settings, Info } from "lucide-react";
 import RecipientInput from "./RecipientInput";
 import EditorPanel, { ContentType } from "./EditorPanel";
-import { cn, isValidEmail } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface EmailForm {
   recipients: string[];
@@ -33,14 +29,10 @@ const initialForm: EmailForm = {
   replyTo: "",
 };
 
-const emailSendingEnabled = false;
-
 export default function EmailComposer() {
   const [form, setForm] = useState<EmailForm>(initialForm);
   const [showCcBcc, setShowCcBcc] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
 
   const updateField = <K extends keyof EmailForm>(key: K, val: EmailForm[K]) =>
     setForm((f) => ({ ...f, [key]: val }));
@@ -53,61 +45,15 @@ export default function EmailComposer() {
     form.subject.trim().length > 0 &&
     form.content.trim().length > 0;
 
-  const handleSend = async () => {
-    if (!isValid || sending) return;
-
-    setSending(true);
-    const toastId = toast.loading(
-      `Sending to ${totalRecipients} recipient${totalRecipients !== 1 ? "s" : ""}…`
-    );
-
-    try {
-      const res = await fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recipients: form.recipients,
-          cc: form.cc,
-          bcc: form.bcc,
-          subject: form.subject,
-          content: form.content,
-          contentType: form.contentType,
-          fromName: form.fromName,
-          replyTo: form.replyTo,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        toast.success(
-          `✅ Sent to ${totalRecipients} recipient${totalRecipients !== 1 ? "s" : ""}!`,
-          { id: toastId, duration: 4000 }
-        );
-        setSent(true);
-        setTimeout(() => setSent(false), 4000);
-      } else {
-        throw new Error(data.error || "Failed to send email");
-      }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Something went wrong";
-      toast.error(`❌ ${message}`, { id: toastId, duration: 5000 });
-    } finally {
-      setSending(false);
-    }
-  };
-
   const handleReset = () => {
     setForm(initialForm);
     setShowCcBcc(false);
     setShowSettings(false);
-    setSent(false);
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto">
       <div className="glass-card p-6 md:p-8 space-y-6">
-
         {/* To */}
         <RecipientInput
           recipients={form.recipients}
@@ -190,7 +136,9 @@ export default function EmailComposer() {
             onClick={() => setShowSettings(!showSettings)}
             className={cn(
               "flex items-center gap-1.5 text-xs transition-colors",
-              showSettings ? "text-violet-400" : "text-white/35 hover:text-white/60"
+              showSettings
+                ? "text-violet-400"
+                : "text-white/35 hover:text-white/60",
             )}
           >
             <Settings size={11} />
@@ -243,9 +191,9 @@ export default function EmailComposer() {
         >
           <Info size={17} className="mt-0.5 shrink-0 text-violet-400" />
           <p className="leading-relaxed">
-            Email sending is disabled in this public demo. MailBlast requires your
-            own sender configuration before it can send emails. Support for
-            end-user email configuration is planned for a future release.
+            Email sending is disabled in this public demo. Safe sender setup,
+            consent controls, and business-owned configuration are being built
+            before delivery is enabled.
           </p>
         </div>
 
@@ -254,13 +202,18 @@ export default function EmailComposer() {
           <div className="text-sm text-white/40 space-y-0.5">
             {totalRecipients > 0 ? (
               <p>
-                <span className="text-white/70 font-semibold">{totalRecipients}</span>
-                {" "}recipient{totalRecipients !== 1 ? "s" : ""}
+                <span className="text-white/70 font-semibold">
+                  {totalRecipients}
+                </span>{" "}
+                recipient{totalRecipients !== 1 ? "s" : ""}
                 {form.cc.length > 0 && (
                   <span className="text-white/30"> · {form.cc.length} CC</span>
                 )}
                 {form.bcc.length > 0 && (
-                  <span className="text-white/30"> · {form.bcc.length} BCC</span>
+                  <span className="text-white/30">
+                    {" "}
+                    · {form.bcc.length} BCC
+                  </span>
                 )}
               </p>
             ) : (
@@ -285,59 +238,37 @@ export default function EmailComposer() {
 
             <button
               type="button"
-              onClick={handleSend}
-              disabled={!emailSendingEnabled || !isValid || sending}
+              disabled
               aria-describedby="email-sending-disabled"
-              className={cn(
-                "btn-primary flex items-center gap-2.5 px-6 py-3 text-sm",
-                sent && "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"
-              )}
+              className="btn-primary flex items-center gap-2.5 px-6 py-3 text-sm"
             >
-              {sending ? (
-                <>
-                  <Loader2 size={15} className="animate-spin" />
-                  Sending…
-                </>
-              ) : sent ? (
-                <>
-                  <MailCheck size={15} />
-                  Sent!
-                </>
-              ) : (
-                <>
-                  <Send size={15} />
-                  Sending Disabled
-                  {totalRecipients > 0 && (
-                    <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs font-bold">
-                      {totalRecipients}
-                    </span>
-                  )}
-                </>
-              )}
+              <Send size={15} />
+              Sending Disabled
             </button>
           </div>
         </div>
 
         {/* Validation hints */}
-        {!isValid && (form.recipients.length > 0 || form.subject || form.content) && (
-          <div className="flex flex-wrap gap-2">
-            {form.recipients.length === 0 && (
-              <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
-                Add at least one recipient
-              </span>
-            )}
-            {!form.subject.trim() && (
-              <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
-                Subject is required
-              </span>
-            )}
-            {!form.content.trim() && (
-              <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
-                Email body is empty
-              </span>
-            )}
-          </div>
-        )}
+        {!isValid &&
+          (form.recipients.length > 0 || form.subject || form.content) && (
+            <div className="flex flex-wrap gap-2">
+              {form.recipients.length === 0 && (
+                <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
+                  Add at least one recipient
+                </span>
+              )}
+              {!form.subject.trim() && (
+                <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
+                  Subject is required
+                </span>
+              )}
+              {!form.content.trim() && (
+                <span className="text-xs text-amber-400/70 bg-amber-400/10 px-2.5 py-1 rounded-full">
+                  Email body is empty
+                </span>
+              )}
+            </div>
+          )}
       </div>
     </div>
   );
