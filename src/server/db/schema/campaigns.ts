@@ -33,6 +33,11 @@ export const deliveryStatus = pgEnum("delivery_status", [
   "suppressed",
   "failed",
 ]);
+export const campaignMessageClass = pgEnum("campaign_message_class", [
+  "marketing",
+  "sales_follow_up",
+  "transactional",
+]);
 
 export const campaigns = pgTable(
   "campaigns",
@@ -42,6 +47,12 @@ export const campaigns = pgTable(
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    category: text("category").notNull().default("saas_growth"),
+    type: text("type").notNull().default("inbound_lead_nurture"),
+    objective: text("objective"),
+    messageClass: campaignMessageClass("message_class")
+      .notNull()
+      .default("marketing"),
     status: campaignStatus("status").notNull().default("draft"),
     currentVersion: integer("current_version").notNull().default(1),
     templateId: text("template_id").references(() => templates.id),

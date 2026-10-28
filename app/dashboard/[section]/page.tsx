@@ -1,6 +1,16 @@
 import { notFound } from "next/navigation";
 
 const sections = {
+  discover: [
+    "Lead discovery",
+    "Build evidence-backed searches from keywords and ICP filters. Results remain review-only until source, permission, verification, and intent checks pass.",
+    "New discovery project",
+  ],
+  leads: [
+    "Lead workspace",
+    "Qualify companies and people without confusing a deliverable address with a warm or lawfully contactable lead.",
+    "Add lead",
+  ],
   campaigns: [
     "Campaigns",
     "Create, version, review, approve, schedule, pause, and inspect campaign delivery.",
@@ -11,6 +21,11 @@ const sections = {
     "Manage people, lists, tags, topics, import attestations, and suppression history.",
     "Import contacts",
   ],
+  segments: [
+    "Segments",
+    "Create reusable audiences from permission, intent, fit, verification, lifecycle, location, engagement, lists, and tags.",
+    "New segment",
+  ],
   templates: [
     "Templates",
     "Build accessible reusable content with protected legal and unsubscribe blocks.",
@@ -20,6 +35,16 @@ const sections = {
     "Reports",
     "Understand eligibility, exclusions, attempts, captures, bounces, complaints, and unsubscribes.",
     "Export report",
+  ],
+  deliverability: [
+    "Deliverability",
+    "Review domain authentication, verification confidence, bounces, complaints, provider health, and recipient-domain trends.",
+    "Run readiness check",
+  ],
+  compliance: [
+    "Compliance center",
+    "Review consent evidence, lawful-use decisions, source provenance, suppression, retention, notices, and jurisdiction-specific controls.",
+    "Review policies",
   ],
   team: [
     "Team & access",

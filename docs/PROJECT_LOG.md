@@ -1,5 +1,15 @@
 # Project log
 
+## 2026-10-29 — warm-lead campaign foundation
+
+- Researched official sender, privacy/direct-marketing, verification, and source-platform requirements.
+- Added the normative worldwide warm-lead campaign product blueprint.
+- Kept PostgreSQL as the authoritative system instead of replacing transactional tenant, billing, campaign, and audit controls with MongoDB.
+- Added seven provenance/discovery tables, campaign classification, forced RLS policies, and a generated migration.
+- Added tested eligibility rules that separate warmth from legal and operational send eligibility.
+- Expanded dashboard navigation and the public landing page while keeping external delivery disabled.
+- Applied and verified the migration against local PostgreSQL 16; format, lint, typecheck, tests, database check, and production build passed.
+
 ## 2026-10-28
 
 - Began implementation from the free-first blueprint.
